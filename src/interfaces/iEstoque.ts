@@ -1,12 +1,12 @@
-import { Types } from 'mongoose';
+import { Types } from "mongoose";
 
 interface iProdutoEstoque {
-    produto: Types.ObjectId;
-    quantidade: number;
+  produto: Types.ObjectId;
+  quantidade: number;
 }
 
 interface iEstoque {
-    produtos: iProdutoEstoque[];
+  produtos: iProdutoEstoque[];
 }
 
 export default iEstoque;

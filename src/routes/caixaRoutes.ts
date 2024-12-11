@@ -1,4 +1,4 @@
-import express, { Router } from "express"
+import express, { Router } from "express";
 import caixaController from "../controllers/caixaController.js";
 
 const router: Router = express.Router();

@@ -1,5 +1,5 @@
-import express, { Router } from "express"
-import supermercadoController from "../controllers/supermercadoController.js"
+import express, { Router } from "express";
+import supermercadoController from "../controllers/supermercadoController.js";
 
 const router: Router = express.Router();
 
@@ -8,7 +8,9 @@ router.get("/supermercados/:id", supermercadoController.obterSupermercadoPorId);
 router.post("/supermercados", supermercadoController.criarSupermercado);
 router.put("/supermercados/:id", supermercadoController.atualizarSupermercado);
 router.delete("/supermercados/:id", supermercadoController.excluirSupermercado);
-router.patch("/supermercados/:id/adicionar-funcionario", supermercadoController.adicionarFuncionario);
-
+router.patch(
+  "/supermercados/:id/adicionar-funcionario",
+  supermercadoController.adicionarFuncionario,
+);
 
 export default router;

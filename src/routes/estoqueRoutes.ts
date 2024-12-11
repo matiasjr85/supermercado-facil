@@ -1,5 +1,5 @@
-import express, {Router} from "express";
-import estoqueController from "../controllers/estoqueController.js"
+import express, { Router } from "express";
+import estoqueController from "../controllers/estoqueController.js";
 
 const router: Router = express.Router();
 

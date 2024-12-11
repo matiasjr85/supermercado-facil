@@ -1,7 +1,7 @@
 interface iendereco {
-    rua: string;
-    numero: number;
-    cep: number;
+  rua: string;
+  numero: number;
+  cep: number;
 }
 
 export default iendereco;
