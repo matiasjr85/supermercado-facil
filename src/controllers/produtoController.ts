@@ -3,7 +3,8 @@ import iProduto from "../interfaces/iProduto.js";
 import fornecedorModel from "../models/fornecedorModel.js";
 import produtoModel from "../models/produtoModel.js";
 import iFornecedor from "../interfaces/iFornecedor";
-class produtoController {
+
+class ProdutoController {
   public static criarProduto = async (
     req: Request,
     res: Response,
@@ -11,22 +12,28 @@ class produtoController {
     try {
       const {
         nome,
-        valor,
+        valorDeCompra,
+        valorDeVenda,
         fornecedorId,
-      }: { nome: string; valor: number; fornecedorId: string } = req.body;
+      }: {
+        nome: string;
+        valorDeCompra: number;
+        valorDeVenda: number;
+        fornecedorId: string;
+      } = req.body;
 
       const fornecedorExiste: iFornecedor | null =
         await fornecedorModel.findById(fornecedorId);
-      console.log(fornecedorExiste);
+
       if (!fornecedorExiste) {
-        console.log(fornecedorExiste);
         res.status(404).json({ mensagem: "Fornecedor não encontrado." });
         return;
       }
 
       const novoProduto: iProduto = await produtoModel.create({
         nome,
-        valor,
+        valorDeCompra,
+        valorDeVenda,
         fornecedor: fornecedorId,
       });
 
@@ -45,7 +52,9 @@ class produtoController {
     res: Response,
   ): Promise<void> => {
     try {
-      const produtos: iProduto[] = await produtoModel.find();
+      const produtos: iProduto[] = await produtoModel
+        .find()
+        .populate("fornecedor", "nome");
 
       res.status(200).json(produtos as iProduto[]);
     } catch (error: unknown) {
@@ -64,11 +73,15 @@ class produtoController {
     try {
       const { id } = req.params;
 
-      const produto: iProduto | null = await produtoModel.findById(id);
+      const produto: iProduto | null = await produtoModel
+        .findById(id)
+        .populate("fornecedor", "nome");
 
       if (!produto) {
         res.status(404).json({ mensagem: "Produto não encontrado." });
+        return;
       }
+
       res.status(200).json(produto as iProduto);
     } catch (error) {
       console.error("Erro ao buscar produto por ID:", error);
@@ -86,14 +99,17 @@ class produtoController {
   ): Promise<void> => {
     try {
       const { id } = req.params;
-      const dadosAtualizado: Partial<iProduto> = req.body;
-      const produtoAtualizado: iProduto | null =
-        await produtoModel.findByIdAndUpdate(id, dadosAtualizado, {
-          new: true,
-        });
+      const dadosAtualizados: Partial<iProduto> = req.body;
+
+      const produtoAtualizado: iProduto | null = await produtoModel
+        .findByIdAndUpdate(id, dadosAtualizados, { new: true })
+        .populate("fornecedor", "nome");
+
       if (!produtoAtualizado) {
         res.status(404).json({ mensagem: "Produto não encontrado." });
+        return;
       }
+
       res.status(200).json(produtoAtualizado as iProduto);
     } catch (error: unknown) {
       console.error("Erro ao atualizar produto:", error);
@@ -105,7 +121,7 @@ class produtoController {
     }
   };
 
-  public static excluirFornecedor = async (
+  public static excluirProduto = async (
     req: Request<{ id: string }>,
     res: Response,
   ): Promise<void> => {
@@ -117,6 +133,7 @@ class produtoController {
 
       if (!produtoExcluido) {
         res.status(404).json({ mensagem: "Produto não encontrado." });
+        return;
       }
 
       res.status(200).json({ mensagem: "Produto excluído com sucesso." });
@@ -131,4 +148,4 @@ class produtoController {
   };
 }
 
-export default produtoController;
+export default ProdutoController;

@@ -4,7 +4,8 @@ import iProduto from "../interfaces/iProduto.js";
 const produtoSchema = new Schema<iProduto>(
   {
     nome: { type: String, required: true },
-    valor: { type: Number, required: true },
+    valorDeCompra: { type: Number, required: true },
+    valorDeVenda: { type: Number, required: true },
     fornecedor: {
       type: Schema.Types.ObjectId,
       ref: "fornecedor",
@@ -14,5 +15,4 @@ const produtoSchema = new Schema<iProduto>(
   { timestamps: true },
 );
 
-//const produto = mongoose.model<iProduto>("produto", produtoSchema)
 export default mongoose.model<iProduto>("produto", produtoSchema);

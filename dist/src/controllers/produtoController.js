@@ -1,21 +1,20 @@
 var _a;
 import fornecedorModel from "../models/fornecedorModel.js";
 import produtoModel from "../models/produtoModel.js";
-class produtoController {}
-_a = produtoController;
-produtoController.criarProduto = async (req, res) => {
+class ProdutoController {}
+_a = ProdutoController;
+ProdutoController.criarProduto = async (req, res) => {
   try {
-    const { nome, valor, fornecedorId } = req.body;
+    const { nome, valorDeCompra, valorDeVenda, fornecedorId } = req.body;
     const fornecedorExiste = await fornecedorModel.findById(fornecedorId);
-    console.log(fornecedorExiste);
     if (!fornecedorExiste) {
-      console.log(fornecedorExiste);
       res.status(404).json({ mensagem: "Fornecedor não encontrado." });
       return;
     }
     const novoProduto = await produtoModel.create({
       nome,
-      valor,
+      valorDeCompra,
+      valorDeVenda,
       fornecedor: fornecedorId,
     });
     res.status(201).json(novoProduto);
@@ -27,9 +26,9 @@ produtoController.criarProduto = async (req, res) => {
     });
   }
 };
-produtoController.obterProdutos = async (req, res) => {
+ProdutoController.obterProdutos = async (req, res) => {
   try {
-    const produtos = await produtoModel.find();
+    const produtos = await produtoModel.find().populate("fornecedor", "nome");
     res.status(200).json(produtos);
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
@@ -39,12 +38,15 @@ produtoController.obterProdutos = async (req, res) => {
     });
   }
 };
-produtoController.obterProdutoPorId = async (req, res) => {
+ProdutoController.obterProdutoPorId = async (req, res) => {
   try {
     const { id } = req.params;
-    const produto = await produtoModel.findById(id);
+    const produto = await produtoModel
+      .findById(id)
+      .populate("fornecedor", "nome");
     if (!produto) {
       res.status(404).json({ mensagem: "Produto não encontrado." });
+      return;
     }
     res.status(200).json(produto);
   } catch (error) {
@@ -55,19 +57,16 @@ produtoController.obterProdutoPorId = async (req, res) => {
     });
   }
 };
-produtoController.atualizarProduto = async (req, res) => {
+ProdutoController.atualizarProduto = async (req, res) => {
   try {
     const { id } = req.params;
-    const dadosAtualizado = req.body;
-    const produtoAtualizado = await produtoModel.findByIdAndUpdate(
-      id,
-      dadosAtualizado,
-      {
-        new: true,
-      },
-    );
+    const dadosAtualizados = req.body;
+    const produtoAtualizado = await produtoModel
+      .findByIdAndUpdate(id, dadosAtualizados, { new: true })
+      .populate("fornecedor", "nome");
     if (!produtoAtualizado) {
       res.status(404).json({ mensagem: "Produto não encontrado." });
+      return;
     }
     res.status(200).json(produtoAtualizado);
   } catch (error) {
@@ -78,12 +77,13 @@ produtoController.atualizarProduto = async (req, res) => {
     });
   }
 };
-produtoController.excluirFornecedor = async (req, res) => {
+ProdutoController.excluirProduto = async (req, res) => {
   try {
     const { id } = req.params;
     const produtoExcluido = await produtoModel.findByIdAndDelete(id);
     if (!produtoExcluido) {
       res.status(404).json({ mensagem: "Produto não encontrado." });
+      return;
     }
     res.status(200).json({ mensagem: "Produto excluído com sucesso." });
   } catch (error) {
@@ -94,4 +94,4 @@ produtoController.excluirFornecedor = async (req, res) => {
     });
   }
 };
-export default produtoController;
+export default ProdutoController;

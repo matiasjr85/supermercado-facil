@@ -78,15 +78,45 @@ estoqueController.adicionarProduto = async (req, res) => {
 estoqueController.retirarProduto = async (req, res) => {
   try {
     const { id } = req.params;
-    const produtoEncontrado = await produtoModel.findByIdAndDelete(id);
-    if (!produtoEncontrado) {
-      res.status(404).json({ message: "Produto não encontado" });
+    const { produtoId, quantidade } = req.body;
+    const estoque = await estoqueModel.findById(id);
+    if (!estoque) {
+      res.status(404).json({ mensagem: "Estoque não encontrado." });
+      return;
     }
-  } catch (error) {}
+    const produtoNoEstoque = estoque.produtos.find(
+      (item) => item.produto.toString() === produtoId,
+    );
+    if (!produtoNoEstoque) {
+      res.status(404).json({ mensagem: "Produto não encontrado no estoque." });
+      return;
+    }
+    produtoNoEstoque.quantidade -= quantidade;
+    if (produtoNoEstoque.quantidade === 0) {
+      estoque.produtos = estoque.produtos.filter(
+        (item) => item.produto.toString() !== produtoId,
+      );
+    }
+    await estoque.save();
+    res.status(200).json({
+      mensagem: "Produto removido do estoque com sucesso.",
+      estoque,
+    });
+  } catch (error) {
+    console.error("Erro ao remover produto do estoque:", error);
+    res.status(500).json({
+      mensagem: "Erro ao remover produto do estoque.",
+      error: error.message,
+    });
+  }
 };
 estoqueController.listarEstoques = async (req, res) => {
   try {
-    const estoques = await estoqueModel.find().populate("produtos.produto");
+    // Popula todas as informações dos produtos relacionados
+    const estoques = await estoqueModel.find().populate({
+      path: "produtos.produto", // Popula os produtos dentro do estoque
+      model: "produto", // Nome do modelo associado
+    });
     res.status(200).json(estoques);
   } catch (error) {
     console.error("Erro ao listar estoques:", error);

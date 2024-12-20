@@ -3,7 +3,8 @@ import iFornecedor from "../interfaces/iFornecedor.js";
 
 interface iProduto {
   nome: string;
-  valor: number;
+  valorDeCompra: number;
+  valorDeVenda: number;
   fornecedor: Types.ObjectId | iFornecedor;
 }
 

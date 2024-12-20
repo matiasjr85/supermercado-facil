@@ -2,7 +2,8 @@ import mongoose, { Schema } from "mongoose";
 const produtoSchema = new Schema(
   {
     nome: { type: String, required: true },
-    valor: { type: Number, required: true },
+    valorDeCompra: { type: Number, required: true },
+    valorDeVenda: { type: Number, required: true },
     fornecedor: {
       type: Schema.Types.ObjectId,
       ref: "fornecedor",
@@ -11,5 +12,4 @@ const produtoSchema = new Schema(
   },
   { timestamps: true },
 );
-//const produto = mongoose.model<iProduto>("produto", produtoSchema)
 export default mongoose.model("produto", produtoSchema);
