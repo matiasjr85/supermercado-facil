@@ -4,11 +4,11 @@ import vendaController from "../controllers/vendaController.js";
 
 const router: Router = express.Router();
 
-router.get("/caixas", caixaController.obterCaixas);
-router.get("/caixas/:id", caixaController.obterCaixaPorId);
-router.post("/caixas", caixaController.criarCaixa);
-router.put("/caixas/:id", caixaController.atualizarCaixa);
-router.delete("/caixas/:id", caixaController.excluirCaixa);
-router.post("/caixas/:id", vendaController.venderProdutos);
+router.get("", caixaController.obterCaixas);
+router.get("/:id", caixaController.obterCaixaPorId);
+router.post("", caixaController.criarCaixa);
+router.put("", caixaController.atualizarCaixa);
+router.delete("/:id", caixaController.excluirCaixa);
+router.post("/:id", vendaController.venderProdutos);
 
 export default router;

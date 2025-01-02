@@ -3,10 +3,10 @@ import clienteController from "../controllers/clienteController.js";
 
 const router: Router = express.Router();
 
-router.get("/clientes", clienteController.obterClientes);
-router.get("/clientes/:id", clienteController.obterClientePorId);
-router.post("/clientes", clienteController.criarCliente);
-router.put("/clientes/:id", clienteController.atualizarCliente);
-router.delete("/clientes/:id", clienteController.excluirCliente);
+router.get("", clienteController.obterClientes);
+router.get("/:id", clienteController.obterClientePorId);
+router.post("", clienteController.criarCliente);
+router.put("/:id", clienteController.atualizarCliente);
+router.delete("/:id", clienteController.excluirCliente);
 
 export default router;

@@ -3,10 +3,10 @@ import funcionarioController from "../controllers/funcionarioController.js";
 
 const router: Router = express.Router();
 
-router.get("/funcionarios", funcionarioController.obterFuncionarios);
-router.get("/funcionarios/:id", funcionarioController.obterFuncionarioPorId);
-router.post("/funcionarios", funcionarioController.criarFuncionario);
-router.put("/funcionarios/:id", funcionarioController.atualizarFuncionario);
-router.delete("/funcionarios/:id", funcionarioController.excluirFuncionario);
+router.get("", funcionarioController.obterFuncionarios);
+router.get("/:id", funcionarioController.obterFuncionarioPorId);
+router.post("", funcionarioController.criarFuncionario);
+router.put("/:id", funcionarioController.atualizarFuncionario);
+router.delete("/:id", funcionarioController.excluirFuncionario);
 
 export default router;
