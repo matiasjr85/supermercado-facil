@@ -47,24 +47,31 @@ class ProdutoController {
     }
   };
 
-  public static obterProdutos = async (
-    req: Request,
-    res: Response,
-  ): Promise<void> => {
+  public static obterProdutos = async (req: Request, res: Response): Promise<void> => {
     try {
-      const produtos: iProduto[] = await produtoModel
+      // Busca todos os produtos e popula o fornecedor (inclui ID e nome)
+      const produtos = await produtoModel
         .find()
-        .populate("fornecedor", "nome");
-
-      res.status(200).json(produtos as iProduto[]);
-    } catch (error: unknown) {
+        .populate("fornecedor", "_id nome");
+  
+      // Caso não existam produtos
+      if (produtos.length === 0) {
+        res.status(404).json({ mensagem: "Nenhum produto encontrado." });
+        return;
+      }
+  
+      // Retorna a lista de produtos
+      res.status(200).json(produtos);
+    } catch (error) {
       console.error("Erro ao buscar produtos:", error);
+  
       res.status(500).json({
         mensagem: "Erro ao buscar produtos.",
         error: (error as Error).message,
       });
     }
   };
+  
 
   public static obterProdutoPorId = async (
     req: Request<{ id: string }>,

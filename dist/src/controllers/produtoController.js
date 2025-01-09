@@ -30,9 +30,16 @@ ProdutoController.criarProduto = async (req, res) => {
 };
 ProdutoController.obterProdutos = async (req, res) => {
     try {
+        // Busca todos os produtos e popula o fornecedor (inclui ID e nome)
         const produtos = await produtoModel
             .find()
-            .populate("fornecedor", "nome");
+            .populate("fornecedor", "_id nome");
+        // Caso não existam produtos
+        if (produtos.length === 0) {
+            res.status(404).json({ mensagem: "Nenhum produto encontrado." });
+            return;
+        }
+        // Retorna a lista de produtos
         res.status(200).json(produtos);
     }
     catch (error) {
